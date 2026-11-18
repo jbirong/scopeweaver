@@ -15,7 +15,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { APP_CONFIG } from "@/config/app-config";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { sidebarItems } from "@/navigation/sidebar/sidebar-items";
 import { usePreferencesStore } from "@/stores/preferences/preferences-provider";
@@ -49,7 +48,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <Link prefetch={false} href="/function/tasks">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/scopeweaver.svg" alt="ScopeWeaver" width={40} height={40} className="shrink-0" />
-                <span className="font-semibold text-base">{APP_CONFIG.name}</span>
+                <div className="flex flex-col leading-tight">
+                  <span className="font-semibold text-base">ARTEX</span>
+                  <span className="text-muted-foreground text-xs">via ScopeWeaver Fork</span>
+                </div>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
