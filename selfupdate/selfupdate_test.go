@@ -404,6 +404,31 @@ func TestCheckURLRejectsNonGitHub(t *testing.T) {
 	}
 }
 
+func TestCheckAssetURLPinsToRepo(t *testing.T) {
+	bad := []string{
+		"https://github.com/cskwork/scopeweaver/releases/download/v1/a.zip", // Upstream, not this fork.
+		"https://github.com/jbirong/other/releases/download/v1/a.zip",
+		"https://github.com/jbirong/scopeweaver-evil/releases/download/v1/a.zip",
+		"https://github.com/jbirong/scopeweaver/raw/main/a.zip",
+		"https://objects.githubusercontent.com/jbirong/scopeweaver/releases/download/v1/a.zip",
+		"https://raw.githubusercontent.com/jbirong/scopeweaver/main/a.zip",
+		"http://github.com/jbirong/scopeweaver/releases/download/v1/a.zip",
+	}
+	for _, raw := range bad {
+		if err := checkAssetURL(mustParse(t, raw)); err == nil {
+			t.Errorf("checkAssetURL(%q) must reject this URL", raw)
+		}
+	}
+	for _, raw := range []string{
+		"https://github.com/jbirong/scopeweaver/releases/download/v1.0.0/SHA256SUMS",
+		"https://GitHub.com/JBirong/ScopeWeaver/releases/download/v1.0.0/a.zip",
+	} {
+		if err := checkAssetURL(mustParse(t, raw)); err != nil {
+			t.Errorf("checkAssetURL(%q) must allow this URL, got: %v", raw, err)
+		}
+	}
+}
+
 func TestAssetNameMatchesBuildScript(t *testing.T) {
 	// build.sh package_binary uses scopeweaver-<version>-<os>-<arch>.zip, stripping
 	// the leading v. A single character mismatch breaks updates on every platform.

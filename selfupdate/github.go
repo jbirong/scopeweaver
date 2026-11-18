@@ -13,7 +13,7 @@ import (
 
 // Repo is the fixed release source. Making it configurable would grant anyone
 // who can edit configuration a remote-code-execution path, which is unacceptable here.
-const Repo = "cskwork/scopeweaver"
+const Repo = "jbirong/scopeweaver"
 
 // latestURL is GitHub's latest stable release endpoint; prereleases and drafts are skipped.
 const latestURL = "https://api.github.com/repos/" + Repo + "/releases/latest"
@@ -81,6 +81,22 @@ func checkURL(u *url.URL) error {
 	}
 	if !allowedHosts[strings.ToLower(u.Hostname())] {
 		return locale.Errorf("Non-GitHub host refused: %s", u.Hostname())
+	}
+	return nil
+}
+
+// checkAssetURL pins a release asset's first-hop URL to this repository's own
+// release downloads. Redirect hops (to GitHub's object storage) are checked by
+// checkURL only. A release whose metadata points at another repository's files
+// is therefore refused rather than installed.
+func checkAssetURL(u *url.URL) error {
+	if err := checkURL(u); err != nil {
+		return err
+	}
+	prefix := "/" + Repo + "/releases/download/"
+	if !strings.EqualFold(u.Hostname(), "github.com") ||
+		!strings.HasPrefix(strings.ToLower(u.EscapedPath()), strings.ToLower(prefix)) {
+		return locale.Errorf("Asset outside %s refused: %s", Repo, u.Host+u.Path)
 	}
 	return nil
 }

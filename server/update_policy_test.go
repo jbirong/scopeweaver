@@ -118,8 +118,8 @@ func TestUpdateAsyncStageStopsAndCleansAfterToggle(t *testing.T) {
 	BuildVersion = "v0.1.0"
 	updHub = &updateHub{subs: map[chan updateProgress]struct{}{}}
 	name := selfupdate.AssetName("v99.0.0", runtime.GOOS, runtime.GOARCH)
-	assetURL := "https://github.com/cskwork/scopeweaver/releases/download/v99.0.0/" + name
-	sumsURL := "https://github.com/cskwork/scopeweaver/releases/download/v99.0.0/SHA256SUMS"
+	assetURL := "https://github.com/jbirong/scopeweaver/releases/download/v99.0.0/" + name
+	sumsURL := "https://github.com/jbirong/scopeweaver/releases/download/v99.0.0/SHA256SUMS"
 	entered, allowRead := make(chan struct{}), make(chan struct{})
 	calls := 0
 	relCache = &releaseCache{fetch: func(_ context.Context, client *http.Client) (*selfupdate.Release, error) {

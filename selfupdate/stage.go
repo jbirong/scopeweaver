@@ -235,7 +235,7 @@ func get(ctx context.Context, c *http.Client, rawURL string) (io.ReadCloser, err
 	if err != nil {
 		return nil, err
 	}
-	if err := checkURL(req.URL); err != nil {
+	if err := checkAssetURL(req.URL); err != nil {
 		return nil, err
 	}
 	req.Header.Set("User-Agent", "scopeweaver-selfupdate")
